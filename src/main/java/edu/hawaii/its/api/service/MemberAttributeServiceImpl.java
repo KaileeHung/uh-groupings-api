@@ -136,11 +136,17 @@ public class MemberAttributeServiceImpl implements MemberAttributeService {
      */
     @Override
     public Person getMemberAttributes(String username, String userIdentifier) {
-        if (!isAdmin(username) && !isOwner(username)) {
-            System.out.println("hiii");
+//        System.out.println("mento" + username + isAdmin(username));
+//        if (!isAdmin(username) && !isOwner(username)) {
+//            System.out.println("hiii");
+//            return new Person();
+//        }
+        if (username == "" || userIdentifier == "") {
+            System.out.println("hi");
             return new Person();
         }
 
+        System.out.println("hellooo");
         WsSubjectLookup lookup = grouperApiService.subjectLookup(userIdentifier);
         System.out.println("poppy" + lookup);
         SubjectsResults results = new SubjectsResults(grouperApiService.subjectsResults(lookup));
