@@ -295,6 +295,9 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
         return attributeAssignmentsResults.getOwnerGroupNames();
     }
 
+    /**
+     * Helper - adminLists
+     */
     @Override
     public List<String> allGroupingsPaths() {
         AttributeAssignmentsResults attributeAssignmentsResults =
@@ -323,6 +326,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     }
 
     /**
+     * Helper - membershipResults
      * Get the name of a grouping from groupPath.
      */
     @Override
@@ -334,6 +338,9 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
         return parentPath.substring(parentPath.lastIndexOf(":") + 1, parentPath.length());
     }
 
+    /**
+     * Helper - isSoleOwner
+     */
     @Override
     public List<String> getGroupingOwners(String currentUser, String groupPath) {
         List<String> owners = new ArrayList<>();
@@ -401,6 +408,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     }
 
     /**
+     * Helper - makeGroups
      * Makes a person with all attributes in attributeNames.
      */
     @Override
@@ -422,6 +430,7 @@ public class GroupingAssignmentServiceImpl implements GroupingAssignmentService 
     }
 
     /**
+     * Helper - adminLists
      * Take a list of grouping path strings and return a list of GroupingPath objects.
      */
     @Override

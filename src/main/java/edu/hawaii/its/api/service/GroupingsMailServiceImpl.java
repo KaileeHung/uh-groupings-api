@@ -67,6 +67,7 @@ public class GroupingsMailServiceImpl implements GroupingsMailService {
     }
 
     /**
+     * Helper - sendCSVMessage
      * Send an SMTP message with a file attachment
      */
     private void sendAttachmentMessage(String from, String to, String subject, String text,
@@ -92,6 +93,7 @@ public class GroupingsMailServiceImpl implements GroupingsMailService {
     }
 
     /**
+     * Helper - sendCSVMessage
      * Build the lines of a CSV file.
      */
     private List<String[]> toCsvObj(List<AddMemberResult> addMemberResults) {
@@ -106,6 +108,7 @@ public class GroupingsMailServiceImpl implements GroupingsMailService {
     }
 
     /**
+     * Helper - sendCSVMessage
      * Write Csv data to a file.
      */
     private FileSystemResource toCsv(List<String[]> data, File file) throws IOException {

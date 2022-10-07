@@ -171,6 +171,9 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
         return attributeAssignmentsResults.isAttributeDefName(attributeName);
     }
 
+    /**
+     * Helper - changeOptStatus
+     */
     @Override
     public GroupingsServiceResult assignGrouperPrivilege(String privilegeName, String groupName, boolean isSet) {
 
@@ -210,6 +213,9 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
     }
 
     //TODO: Move both checkPrivileges helper methods to the Governor class once it's built
+    /**
+     * Helper - changeOptStatus, changeGroupAttributeStatus
+     */
     private void checkPrivileges(String groupingPath, String ownerUsername) {
         if (!memberAttributeService.isOwner(groupingPath, ownerUsername)
                 && !memberAttributeService.isAdmin(ownerUsername)) {
@@ -217,6 +223,9 @@ public class GroupAttributeServiceImpl implements GroupAttributeService {
         }
     }
 
+    /**
+     * Helper - getAllSyncDestinations
+     */
     private void checkPrivileges(String ownerUsername) {
         if (!memberAttributeService.isOwner(ownerUsername) && !memberAttributeService.isAdmin(
                 ownerUsername)) {
