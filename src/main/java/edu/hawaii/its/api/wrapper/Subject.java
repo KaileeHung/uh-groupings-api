@@ -43,6 +43,16 @@ public class Subject extends Results {
         return getAttributeValue(2);
     }
 
+    public boolean getLDAP() {
+        System.out.println("start");
+//        for (int i = 0; i < wsSubject.getAttributeValues().length; i++) {
+//            System.out.println(wsSubject.getAttributeValues()[i]);
+//        }
+//        System.out.println(wsSubject.getName());
+        System.out.println("end");
+        return wsSubject.getAttributeValues().length != 0;
+    }
+
     private String getAttributeValue(int index) {
         String[] attributeValues = wsSubject.getAttributeValues();
         if (isEmpty(attributeValues)) {

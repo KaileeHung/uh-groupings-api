@@ -18,8 +18,10 @@ public class Person implements Comparable<Person> {
             ATTRIBUTE_FIRST_NAME,
             ATTRIBUTE_LAST_NAME,
             ATTRIBUTE_UHUUID,
-            ATTRIBUTE_USERNAME
+            ATTRIBUTE_USERNAME,
     };
+
+    public static boolean isLDAP;
 
     private Map<String, String> attributes = new HashMap<>();
 
@@ -52,6 +54,20 @@ public class Person implements Comparable<Person> {
 
         attributes.put(ATTRIBUTE_FIRST_NAME, firstName);
         attributes.put(ATTRIBUTE_LAST_NAME, lastName);
+    }
+
+    // Constructor.
+    public Person(String name, String uhUuid, String username, String firstName, String lastName, boolean isLDAP) {
+        this(name, uhUuid, username);
+
+        attributes.put(ATTRIBUTE_FIRST_NAME, firstName);
+        attributes.put(ATTRIBUTE_LAST_NAME, lastName);
+
+        this.isLDAP = isLDAP;
+    }
+
+    public boolean getLDAP() {
+        return this.isLDAP;
     }
 
     public String getUsername() {

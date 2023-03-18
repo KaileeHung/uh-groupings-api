@@ -51,6 +51,10 @@ public class SubjectResult extends Results {
         return subject.getFirstName();
     }
 
+    public boolean getLDAP() {
+        return subject.getLDAP();
+    }
+
     public Subject getSubject() {
         return subject;
     }

@@ -31,7 +31,7 @@ public class SubjectService {
             return new Person();
         }
         return new Person(subjectResult.getName(), subjectResult.getUhUuid(), subjectResult.getUid(),
-                subjectResult.getFirstName(), subjectResult.getLastName());
+                subjectResult.getFirstName(), subjectResult.getLastName(), subjectResult.getLDAP());
     }
 
     public boolean isValidIdentifier(String uhIdentifier) {
