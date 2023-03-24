@@ -1,5 +1,6 @@
 package edu.hawaii.its.api.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -22,8 +23,8 @@ public class UhIdentifierGenerator {
     @Value("${groupings.api.test.admin_user}")
     private String ADMIN;
 
-    private List<String> testUhNumbers;
-    private List<String> testUsernames;
+    private List<String> testUhUuids;
+    private List<String> testUids;
 
     @Autowired
     GroupingAssignmentService groupingAssignmentService;
@@ -73,6 +74,47 @@ public class UhIdentifierGenerator {
                 "; uhUuid:" + user.getUhUuid() +
                 "; username: " + user.getUsername() + ";");
         return user;
+    }
+
+    public List<String> getTestUids() {
+        setTestUids();
+        return testUids;
+    }
+
+    public List<String> getTestUhUuids() {
+        setTestUhUuids();
+        return testUhUuids;
+    }
+
+    private void setTestUids() {
+        testUids = new ArrayList<>();
+
+        while (testUids.size() < 4) {
+            String uidToAdd = getRandomPerson().getUsername();
+            if (!testUids.contains(uidToAdd)) {
+                grouperApiService.removeMember(GROUPING_ADMINS, uidToAdd);
+                grouperApiService.removeMember(GROUPING_INCLUDE, uidToAdd);
+                grouperApiService.removeMember(GROUPING_EXCLUDE, uidToAdd);
+                grouperApiService.removeMember(GROUPING_OWNERS, uidToAdd);
+                testUids.add(uidToAdd);
+            }
+        }
+    }
+
+    private void setTestUhUuids() {
+        testUhUuids = new ArrayList<>();
+
+        while (testUhUuids.size() < 4) {
+            Person personToAdd = getRandomPerson();
+            String uhUuidToAdd = personToAdd.getUhUuid();
+            if (!testUhUuids.contains(uhUuidToAdd)) {
+                grouperApiService.removeMember(GROUPING_ADMINS, uhUuidToAdd);
+                grouperApiService.removeMember(GROUPING_INCLUDE, uhUuidToAdd);
+                grouperApiService.removeMember(GROUPING_EXCLUDE, uhUuidToAdd);
+                grouperApiService.removeMember(GROUPING_OWNERS, uhUuidToAdd);
+                testUhUuids.add(uhUuidToAdd);
+            }
+        }
     }
 
     private static int getRandomNumberBetween(int start, int end) {

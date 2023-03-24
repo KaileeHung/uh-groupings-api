@@ -1,7 +1,7 @@
 package edu.hawaii.its.api.service;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import edu.hawaii.its.api.configuration.SpringBootWebApplication;
@@ -96,7 +96,12 @@ public class TestGrouperApiService {
     @Autowired
     private MemberService memberService;
 
-    @BeforeAll
+    @Autowired
+    private UhIdentifierGenerator uhIdentifierGenerator;
+
+    private Person testPerson;
+
+    @BeforeEach
     public void init() {
         assertTrue(memberService.isAdmin(ADMIN));
 
@@ -112,16 +117,27 @@ public class TestGrouperApiService {
             assertFalse(memberService.isAdmin(testUsername));
         });
         TEST_UH_NUMBERS.forEach(testUhNumber -> {
-            grouperApiService.removeMember(GROUPING_ADMINS, testUhNumber);
-            grouperApiService.removeMember(GROUPING_INCLUDE, testUhNumber);
-            grouperApiService.removeMember(GROUPING_EXCLUDE, testUhNumber);
-            grouperApiService.removeMember(GROUPING_OWNERS, testUhNumber);
+                grouperApiService.removeMember(GROUPING_ADMINS, testUhNumber);
+                grouperApiService.removeMember(GROUPING_INCLUDE, testUhNumber);
+                grouperApiService.removeMember(GROUPING_EXCLUDE, testUhNumber);
+                grouperApiService.removeMember(GROUPING_OWNERS, testUhNumber);
 
-            assertFalse(memberService.isOwner(GROUPING, testUhNumber));
-            assertFalse(memberService.isMember(GROUPING_INCLUDE, testUhNumber));
-            assertFalse(memberService.isMember(GROUPING_EXCLUDE, testUhNumber));
+                assertFalse(memberService.isOwner(GROUPING, testUhNumber));
+                assertFalse(memberService.isMember(GROUPING_INCLUDE, testUhNumber));
+                assertFalse(memberService.isMember(GROUPING_EXCLUDE, testUhNumber));
             assertFalse(memberService.isAdmin(testUhNumber));
         });
+
+        testPerson = uhIdentifierGenerator.getRandomPerson();
+        grouperApiService.removeMember(GROUPING_ADMINS, testPerson.getUsername());
+        grouperApiService.removeMember(GROUPING_INCLUDE, testPerson.getUsername());
+        grouperApiService.removeMember(GROUPING_EXCLUDE, testPerson.getUsername());
+        grouperApiService.removeMember(GROUPING_OWNERS, testPerson.getUsername());
+
+        grouperApiService.removeMember(GROUPING_ADMINS, testPerson.getUhUuid());
+        grouperApiService.removeMember(GROUPING_INCLUDE, testPerson.getUhUuid());
+        grouperApiService.removeMember(GROUPING_EXCLUDE, testPerson.getUhUuid());
+        grouperApiService.removeMember(GROUPING_OWNERS, testPerson.getUhUuid());
     }
 
     @Test
@@ -133,53 +149,59 @@ public class TestGrouperApiService {
 
     @Test
     public void addMemberTest() {
-        // With uh usernames.
-        AddMemberResult addMemberResult = grouperApiService.addMember(GROUPING_INCLUDE, TEST_USERNAMES.get(0));
-        assertNotNull(addMemberResult);
-        assertTrue(memberService.isMember(GROUPING_INCLUDE, TEST_USERNAMES.get(0)));
+        List<String> testUids = uhIdentifierGenerator.getTestUids();
+        List <String> testUhUuids = uhIdentifierGenerator.getTestUhUuids();
 
-        addMemberResult = grouperApiService.addMember(GROUPING_INCLUDE, TEST_USERNAMES.get(1));
+        // With uh usernames.
+        AddMemberResult addMemberResult = grouperApiService.addMember(GROUPING_INCLUDE, testUids.get(0));
         assertNotNull(addMemberResult);
-        assertTrue(memberService.isMember(GROUPING_INCLUDE, TEST_USERNAMES.get(1)));
+        assertTrue(memberService.isMember(GROUPING_INCLUDE, testUids.get(0)));
+
+        addMemberResult = grouperApiService.addMember(GROUPING_INCLUDE, testUids.get(1));
+        assertNotNull(addMemberResult);
+        assertTrue(memberService.isMember(GROUPING_INCLUDE, testUids.get(1)));
         //// Clean up
-        grouperApiService.removeMember(GROUPING_INCLUDE, TEST_USERNAMES.get(0));
-        grouperApiService.removeMember(GROUPING_INCLUDE, TEST_USERNAMES.get(1));
+        grouperApiService.removeMember(GROUPING_INCLUDE, testUids.get(0));
+        grouperApiService.removeMember(GROUPING_INCLUDE, testUids.get(1));
 
         // With uh numbers.
-        addMemberResult = grouperApiService.addMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(0));
+        addMemberResult = grouperApiService.addMember(GROUPING_INCLUDE, testUhUuids.get(0));
         assertNotNull(addMemberResult);
-        assertTrue(memberService.isMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(0)));
+        assertTrue(memberService.isMember(GROUPING_INCLUDE, testUhUuids.get(0)));
 
-        addMemberResult = grouperApiService.addMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(1));
+        addMemberResult = grouperApiService.addMember(GROUPING_INCLUDE, testUhUuids.get(1));
         assertNotNull(addMemberResult);
-        assertTrue(memberService.isMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(1)));
+        assertTrue(memberService.isMember(GROUPING_INCLUDE, testUhUuids.get(1)));
         //// Clean up
-        grouperApiService.removeMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(0));
-        grouperApiService.removeMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(1));
+        grouperApiService.removeMember(GROUPING_INCLUDE, testUhUuids.get(0));
+        grouperApiService.removeMember(GROUPING_INCLUDE, testUhUuids.get(1));
     }
 
     @Test
     public void removeMemberTest() {
+        List<String> testUids = uhIdentifierGenerator.getTestUids();
+        List <String> testUhUuids = uhIdentifierGenerator.getTestUhUuids();
+
         // With uh usernames.
-        grouperApiService.addMember(GROUPING_INCLUDE, TEST_USERNAMES.get(0));
-        grouperApiService.addMember(GROUPING_INCLUDE, TEST_USERNAMES.get(1));
+        grouperApiService.addMember(GROUPING_INCLUDE, testUids.get(0));
+        grouperApiService.addMember(GROUPING_INCLUDE, testUids.get(1));
         RemoveMemberResult removeMemberResult =
-                grouperApiService.removeMember(GROUPING_INCLUDE, TEST_USERNAMES.get(0));
+                grouperApiService.removeMember(GROUPING_INCLUDE, testUids.get(0));
         assertNotNull(removeMemberResult);
-        assertFalse(memberService.isMember(GROUPING_INCLUDE, TEST_USERNAMES.get(0)));
-        removeMemberResult = grouperApiService.removeMember(GROUPING_INCLUDE, TEST_USERNAMES.get(1));
+        assertFalse(memberService.isMember(GROUPING_INCLUDE, testUids.get(0)));
+        removeMemberResult = grouperApiService.removeMember(GROUPING_INCLUDE, testUids.get(1));
         assertNotNull(removeMemberResult);
-        assertFalse(memberService.isMember(GROUPING_INCLUDE, TEST_USERNAMES.get(1)));
+        assertFalse(memberService.isMember(GROUPING_INCLUDE, testUids.get(1)));
 
         // With uh numbers.
-        grouperApiService.addMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(0));
-        grouperApiService.addMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(1));
-        removeMemberResult = grouperApiService.removeMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(0));
+        grouperApiService.addMember(GROUPING_INCLUDE, testUhUuids.get(0));
+        grouperApiService.addMember(GROUPING_INCLUDE, testUhUuids.get(1));
+        removeMemberResult = grouperApiService.removeMember(GROUPING_INCLUDE, testUhUuids.get(0));
         assertNotNull(removeMemberResult);
-        assertFalse(memberService.isMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(0)));
-        removeMemberResult = grouperApiService.removeMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(1));
+        assertFalse(memberService.isMember(GROUPING_INCLUDE, testUhUuids.get(0)));
+        removeMemberResult = grouperApiService.removeMember(GROUPING_INCLUDE, testUhUuids.get(1));
         assertNotNull(removeMemberResult);
-        assertFalse(memberService.isMember(GROUPING_INCLUDE, TEST_UH_NUMBERS.get(1)));
+        assertFalse(memberService.isMember(GROUPING_INCLUDE, testUhUuids.get(1)));
     }
 
     @Test
@@ -302,16 +324,16 @@ public class TestGrouperApiService {
 
     @Test
     public void groupsResultsTest() {
-        WsGetGroupsResults uhUsernameResults = grouperApiService.groupsResults(TEST_USERNAMES.get(0));
-        WsGetGroupsResults uhNumberResults = grouperApiService.groupsResults(TEST_UH_NUMBERS.get(0));
-        assertNotNull(uhUsernameResults);
-        assertNotNull(uhNumberResults);
-        assertNotNull(uhUsernameResults.getResults());
-        assertNotNull(uhNumberResults.getResults());
-        assertNotNull(uhUsernameResults.getResults()[0]);
-        assertNotNull(uhNumberResults.getResults()[0]);
-        assertNotNull(uhUsernameResults.getResults()[0].getWsGroups());
-        assertNotNull(uhNumberResults.getResults()[0].getWsGroups());
+        WsGetGroupsResults uidResults = grouperApiService.groupsResults(TEST_USERNAMES.get(0));
+        WsGetGroupsResults uhUuidResults = grouperApiService.groupsResults(TEST_UH_NUMBERS.get(0));
+        assertNotNull(uidResults);
+        assertNotNull(uhUuidResults);
+        assertNotNull(uidResults.getResults());
+        assertNotNull(uhUuidResults.getResults());
+        assertNotNull(uidResults.getResults()[0]);
+        assertNotNull(uhUuidResults.getResults()[0]);
+        assertNotNull(uidResults.getResults()[0].getWsGroups());
+        assertNotNull(uhUuidResults.getResults()[0].getWsGroups());
     }
 
     @Test
@@ -324,15 +346,15 @@ public class TestGrouperApiService {
 
     @Test
     public void subjectLookupTest() {
-        for (String testUsername : TEST_USERNAMES) {
-            WsSubjectLookup subjectLookup = grouperApiService.subjectLookup(testUsername);
-            assertEquals(testUsername, subjectLookup.getSubjectIdentifier());
+        for (String testUid : TEST_USERNAMES) {
+            WsSubjectLookup subjectLookup = grouperApiService.subjectLookup(testUid);
+            assertEquals(testUid, subjectLookup.getSubjectIdentifier());
             assertNull(subjectLookup.getSubjectId());
             assertNull(subjectLookup.getSubjectSourceId());
         }
-        for (String testUhNumber : TEST_UH_NUMBERS) {
-            WsSubjectLookup subjectLookup = grouperApiService.subjectLookup(testUhNumber);
-            assertEquals(testUhNumber, subjectLookup.getSubjectId());
+        for (String testUhUuid : TEST_UH_NUMBERS) {
+            WsSubjectLookup subjectLookup = grouperApiService.subjectLookup(testUhUuid);
+            assertEquals(testUhUuid, subjectLookup.getSubjectId());
             assertNull(subjectLookup.getSubjectIdentifier());
             assertNull(subjectLookup.getSubjectSourceId());
         }
